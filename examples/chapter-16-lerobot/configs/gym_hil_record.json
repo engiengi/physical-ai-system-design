@@ -1,0 +1,39 @@
+{
+  "env": {
+    "type": "gym_manipulator",
+    "name": "gym_hil",
+    "task": "PandaPickCubeKeyboard-v0",
+    "fps": 10,
+    "processor": {
+      "control_mode": "keyboard",
+      "gripper": {
+        "use_gripper": true,
+        "gripper_penalty": -0.02
+      },
+      "reset": {
+        "control_time_s": 60.0,
+        "reset_time_s": 2.0,
+        "terminate_on_success": false,
+        "fixed_reset_joint_positions": [
+          0.0,
+          0.195,
+          0.0,
+          -2.43,
+          0.0,
+          2.62,
+          0.785
+        ]
+      }
+    }
+  },
+  "dataset": {
+    "repo_id": "username/sim_pick_cube",
+    "root": null,
+    "task": "pick_cube",
+    "num_episodes_to_record": 10,
+    "replay_episode": null,
+    "push_to_hub": false
+  },
+  "mode": "record",
+  "device": "cpu"
+}

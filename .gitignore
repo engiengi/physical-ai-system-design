@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Logs and output
+logs/
+outputs/
+runs/
+checkpoints/
+
+# Large model files
+*.pt
+*.pth
+*.ckpt
+*.onnx
