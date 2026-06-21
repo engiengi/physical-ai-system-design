@@ -9,6 +9,25 @@ if ! command -v conda >/dev/null 2>&1; then
   exit 1
 fi
 
+if [[ -n "${PYTHONPATH:-}" ]] && echo "${PYTHONPATH}" | grep -q "/opt/ros/"; then
+  echo "경고: PYTHONPATH에 ROS 경로가 감지되었습니다." >&2
+  echo "  현재 PYTHONPATH: ${PYTHONPATH}" >&2
+  echo "" >&2
+  echo "  ROS 경로가 Python 3.12 conda 환경과 충돌해 PyTorch/NumPy import 오류가" >&2
+  echo "  발생할 수 있습니다. 새 터미널을 열거나 다음을 먼저 실행하세요." >&2
+  echo "" >&2
+  echo "    export PYTHONPATH=" >&2
+  echo "" >&2
+  read -r -p "PYTHONPATH를 초기화하고 계속 진행하시겠습니까? [y/N] " _reply
+  if [[ "${_reply}" =~ ^[Yy]$ ]]; then
+    export PYTHONPATH=
+    echo "PYTHONPATH를 초기화했습니다." >&2
+  else
+    echo "설치를 중단합니다." >&2
+    exit 1
+  fi
+fi
+
 eval "$(conda shell.bash hook)"
 
 if ! conda env list | awk '{print $1}' | grep -qx "${ENV_NAME}"; then
@@ -16,7 +35,7 @@ if ! conda env list | awk '{print $1}' | grep -qx "${ENV_NAME}"; then
 fi
 
 conda activate "${ENV_NAME}"
-conda install -y ffmpeg=7.1.1 -c conda-forge
+conda install -y "ffmpeg>=6" -c conda-forge
 
 mkdir -p "${WORK_DIR}"
 cd "${WORK_DIR}"

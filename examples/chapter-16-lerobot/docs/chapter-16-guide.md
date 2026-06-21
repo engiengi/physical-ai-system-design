@@ -77,11 +77,9 @@ preprocess, postprocess = make_pre_post_processors(
     },
 )
 
-dataset = LeRobotDataset("lerobot/libero")
+dataset = LeRobotDataset("lerobot/libero", episodes=[0])
 
-episode_index = 0
-frame_index = dataset.episode_data_index["from"][episode_index].item()
-frame = dataset[frame_index]
+frame = dataset[0]
 
 obs = preprocess(frame)
 
@@ -91,11 +89,26 @@ with torch.inference_mode():
 action = postprocess(action)
 
 print("예측된 행동값 형태:", action.shape)
-# 예시 출력: torch.Size([10, 7])
-# [행동 청크 길이, 액션 차원]
+# 예시 출력: torch.Size([1, 7])
+# [배치 크기, 액션 차원]
+# 액션 차원 7 = Δx, Δy, Δz (EEF 위치 델타 3) + Δroll, Δpitch, Δyaw (EEF 자세 델타 3) + gripper (1)
 ```
 
-출력이 `[10, 7]`이라면 모델이 미래 10개 스텝의 행동을 한 번에 예측했고, 각 스텝이 7차원의 액션으로 구성되었다는 뜻입니다. 각 액션 차원의 의미는 데이터셋과 로봇 구성에 따라 달라집니다.
+`LeRobotDataset`의 `episodes` 파라미터에 에피소드 번호 목록을 전달하면 해당 에피소드만 로드합니다. `dataset[0]`은 로드된 데이터셋의 첫 번째 프레임을 반환합니다.
+
+`select_action`은 내부 큐를 관리하며 한 번에 1스텝의 행동을 반환합니다. 모델은 내부적으로 `chunk_size`만큼의 행동을 한 번에 예측한 뒤 큐에 쌓아두고, 호출할 때마다 `n_action_steps`만큼 꺼내 줍니다. `HuggingFaceVLA/smolvla_libero` 체크포인트는 `n_action_steps=1`로 설정되어 있어 출력 형태가 `[1, 7]`입니다.
+
+청크 전체를 한꺼번에 받으려면 `predict_action_chunk`를 사용합니다.
+
+```python
+with torch.inference_mode():
+    action_chunk = policy.predict_action_chunk(obs)
+print("청크 전체 형태:", action_chunk.shape)
+# 예시 출력: torch.Size([1, 50, 7])
+# [배치 크기, 청크 길이, 액션 차원]
+```
+
+각 액션 차원의 의미는 데이터셋과 로봇 구성에 따라 달라집니다. LIBERO/Franka Panda 환경은 OSC_POSE 컨트롤러를 사용해 액션을 7차원으로 정의하지만, 다른 로봇이나 컨트롤러를 사용하는 환경에서는 차원 수와 의미가 달라집니다.
 
 ---
 
