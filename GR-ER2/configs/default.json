@@ -1,0 +1,10 @@
+{
+  "models": ["gemini-robotics-er-2-preview", "gemini-3.5-flash"],
+  "streaming_model": "gemini-robotics-er-2-streaming-preview",
+  "thinking_level": "medium",
+  "max_output_tokens": 4096,
+  "max_agent_steps": 6,
+  "api_timeout_ms": 120000,
+  "simulation_timeout_seconds": 300,
+  "isaac_image": "nvcr.io/nvidia/isaac-sim:6.0.0-dev2"
+}

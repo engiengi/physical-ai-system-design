@@ -1,0 +1,12 @@
+.venv/
+.env
+.env.*
+*.py[cod]
+/연구일지.md
+__pycache__/
+.pytest_cache/
+runtime/
+outputs/
+data/uploads/
+data/samples/*.png
+data/samples/*.json
