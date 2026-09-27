@@ -81,7 +81,14 @@ case "$ACTION" in
     # Isaac's installation is private to uid 1234. Share only project output
     # directories through the host group, retaining the image's original user.
     chmod 2775 "$PROJECT_ROOT" "$PROJECT_ROOT/runtime" "$PROJECT_ROOT/outputs" "$PROJECT_ROOT/data/samples"
-    if [[ -f "$PROJECT_ROOT/runtime/isaac.log" ]]; then chmod g+w "$PROJECT_ROOT/runtime/isaac.log"; fi
+    # Container uid 1234 creates this file with the host group and umask 0002.
+    # A host group member can write it, but cannot chmod a different owner's file.
+    if [[ -f "$PROJECT_ROOT/runtime/isaac.log" && ! -w "$PROJECT_ROOT/runtime/isaac.log" ]]; then
+      chmod g+w "$PROJECT_ROOT/runtime/isaac.log" || {
+        echo 'runtime/isaac.log 쓰기 권한을 확인하세요. 기존 로그를 보존한 뒤 소유자/그룹을 확인하세요.' >&2
+        exit 1
+      }
+    fi
     EXEC_ENV=()
     python3 -c 'import json,time,pathlib,sys; pathlib.Path("runtime/status.json").write_text(json.dumps({"ready":False,"updated":time.time(),"world_scenario":sys.argv[1],"note":"starting simulator"}))' "$SCENARIO"
     if [[ "$ACTION" == gui ]]; then

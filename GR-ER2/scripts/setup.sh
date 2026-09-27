@@ -4,6 +4,9 @@ set -euo pipefail
 unset PYTHONPATH PYTHONHOME
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_ROOT"
+if [[ -z "${PYTHON:-}" && -x runtime/bootstrap-venv/bin/uv ]]; then
+  PYTHON="$(runtime/bootstrap-venv/bin/uv python find 3.12.11)"
+fi
 PYTHON="${PYTHON:-python3.12}"
 command -v "$PYTHON" >/dev/null || {
   echo 'Python 3.12가 필요합니다. 실행방법.md 1.1절을 확인하세요.' >&2; exit 1;

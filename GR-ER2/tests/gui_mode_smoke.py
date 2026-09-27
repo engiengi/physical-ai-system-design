@@ -1,7 +1,7 @@
 """Opt-in integration check against an ALREADY RUNNING simulator + web server.
 
 Runs one manual pick/place through the same HTTP API as the lab UI. No model API
-calls. Run on Spark: .venv/bin/python tests/gui_mode_smoke.py native|remote
+calls. Run on the simulation host: .venv/bin/python tests/gui_mode_smoke.py native|remote|brev
 """
 import argparse
 import json
@@ -37,7 +37,7 @@ def action(payload):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("mode", choices=["native", "remote"])
+    parser.add_argument("mode", choices=["native", "remote", "brev"])
     args = parser.parse_args()
     action({"command": "reset", "scene": 0})
     obs = action({"command": "snapshot"})

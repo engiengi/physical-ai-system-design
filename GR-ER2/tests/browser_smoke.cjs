@@ -6,7 +6,7 @@ const WebSocket = require('ws');
 const expression = process.argv[2] || '({title:document.title,status:document.getElementById("status").textContent,samples:document.getElementById("sample").options.length,images:[...document.images].map(i=>({id:i.id,width:i.naturalWidth}))})';
 http.get('http://127.0.0.1:'+(process.env.DEBUG_PORT||'19222')+'/json', r => {
   let data='';r.on('data',b=>data+=b);r.on('end',()=>{
-    const target=JSON.parse(data).find(t=>process.env.DEBUG_PORT ? t.type==='page' : t.url.includes('18765'));
+    const target=JSON.parse(data).find(t=>t.type==='page' && (process.env.PAGE_URL ? t.url.includes(process.env.PAGE_URL) : process.env.DEBUG_PORT ? true : t.url.includes('18765')));
     if(!target)throw Error('GUI tab not found');
     const ws=new WebSocket(target.webSocketDebuggerUrl);let id=0;const pending=new Map();
     const send=(method,params={})=>new Promise((resolve,reject)=>{const n=++id;pending.set(n,{resolve,reject});ws.send(JSON.stringify({id:n,method,params}));});

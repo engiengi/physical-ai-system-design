@@ -29,7 +29,7 @@ class DocumentationTests(unittest.TestCase):
             label = text[:match.start()].rstrip().splitlines()[-1]
             with self.subTest(line=text[:match.start()].count('\n') + 1):
                 self.assertTrue(label.startswith('**') and label.endswith('**'), label)
-                if match[1] == 'bash':
+                if match[1] in ('bash', 'powershell'):
                     self.assertTrue(label.startswith('**실행 위치:'), label)
                 else:
                     self.assertRegex(label, r'실행 아님|입력하지 않음')
@@ -70,6 +70,17 @@ class DocumentationTests(unittest.TestCase):
 
     def test_secret_ignored(self):
         self.assertIn(".env", (ROOT / ".gitignore").read_text().splitlines())
+
+    def test_brev_route_has_complete_lifecycle(self):
+        text = (ROOT / "실행방법.md").read_text()
+        for anchor in ('brev-setup', 'brev-install', 'brev-gui', 'brev-scenes', 'brev-cleanup'):
+            self.assertIn(f'<a id="{anchor}"></a>', text)
+        for command in ('brev login', 'brev create gr-er2-lab', 'scripts/setup_brev.sh',
+                        'scripts/cloud_gui.sh start', 'scripts/cloud_gui.sh stop',
+                        '127.0.0.1:6080:127.0.0.1:6080', 'rsync -av', 'brev delete'):
+            self.assertIn(command, text)
+        self.assertIn('중지·재시작을 지원하지 않', text)
+        self.assertIn('Python 3.12.11', text)
 
     def test_private_writing_notes_ignored(self):
         rules = (ROOT / ".gitignore").read_text().splitlines()

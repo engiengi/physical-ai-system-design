@@ -7,7 +7,9 @@ Gemini Robotics ER 2 API의 이미지 추론부터 Isaac Sim의 로봇 조작·L
 | 할 일 | 매뉴얼 |
 |---|---|
 | GPU 없이 내 이미지로 API 사용 | [1.1~1.3 설치](./실행방법.md#step-1) → [2 API 등록·첫 요청](./실행방법.md#step-2) |
-| 로봇 시뮬레이션 최초 설치 | [1.4~1.7 GPU·Docker·Isaac Sim](./실행방법.md#gpu-driver) |
+| 내 워크스테이션에서 로봇 실습 | [1.4~1.7 GPU·Docker·Isaac Sim](./실행방법.md#gpu-driver) |
+| GPU 없는 PC에서 Brev로 로봇 실습 | [1.8 서버 생성](./실행방법.md#brev-setup) → [1.9 설치](./실행방법.md#brev-install) → [2 API](./실행방법.md#step-2) → [7.5 브라우저 GUI](./실행방법.md#brev-gui) |
+| Brev 설치 후 다시 실행·결과 회수 | [7.5 터미널 A·B·C](./실행방법.md#brev-gui) → [9.1 회수·삭제](./실행방법.md#brev-cleanup) |
 | 이미 설치된 환경에서 다시 실행 | [0.2 재시작](./실행방법.md#existing-install) |
 | 이미지 비교·수동 조작·한 블록/세 블록 | [3 시작](./실행방법.md#step-3) → [4 비교](./실행방법.md#step-4) → [5 조작](./실행방법.md#step-5) → [6 모델 지시](./실행방법.md#step-6) |
 | 영상 기반 방해 감지·복구 | [6.5~6.6 Live](./실행방법.md#live-recovery-experiment) |
@@ -20,7 +22,8 @@ Gemini Robotics ER 2 API의 이미지 추론부터 Isaac Sim의 로봇 조작·L
 ## 실행 구조
 
 - 호스트 Python 3.12 가상환경: 웹 GUI, Google API 요청, 입력·응답·평가 기록.
-- Isaac Sim `6.0.0-dev2` 컨테이너: 카메라, 물리, 로봇 하위 제어. NVIDIA RTX 호스트가 필요합니다.
+- Isaac Sim `6.0.0-dev2` 컨테이너: 카메라, 물리, 로봇 하위 제어. NVIDIA RTX 워크스테이션 또는 Brev L40S 서버에서 실행합니다.
+- Brev 전체 GUI: noVNC + SSH 터널. 개인 PC에는 GPU가 필요하지 않고, 서버에 공개 포트를 열지 않습니다.
 - Google API: 일반 ER 2 / Gemini 비교, ER 2 Streaming, 사후 영상 진행률 판단.
 - `outputs/`: 실행별 원본 입력·응답·시뮬레이션 영상·통합 영상·평가. Git에는 포함하지 않습니다.
 

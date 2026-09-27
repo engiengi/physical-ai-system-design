@@ -59,7 +59,7 @@ for path in (runtime / "queue").glob("*.json"):
     write_json(runtime / "replies" / path.name, {"error": "시뮬레이터 재시작으로 요청이 취소되었습니다."})
     path.unlink()
 (runtime / "STOP").unlink(missing_ok=True)
-write_json(runtime / "status.json", {"ready": False, "updated": time.time(), "note": "Isaac assets/cameras loading"})
+write_json(runtime / "status.json", {"ready": False, "world_scenario": "blocks", "updated": time.time(), "note": "Isaac assets/cameras loading"})
 
 world = World(stage_units_in_meters=1.0, physics_dt=1/60, rendering_dt=1/60)
 world.scene.add_default_ground_plane(z_position=-0.06)
@@ -445,7 +445,7 @@ try:
                         "tray_center": tray_parts[0].get_world_pose()[0][:2].tolist()}) + "\n")
                 recording["frames"] += 1
             save_image(runtime / "camera.jpg", rgba(camera))
-            write_json(runtime / "status.json", {"ready": True, "busy": active is not None or homing is not None, "updated": time.time(),
+            write_json(runtime / "status.json", {"ready": True, "world_scenario": "blocks", "busy": active is not None or homing is not None, "updated": time.time(),
                        "revision": revision, "scene": scene, "simulation_time": world.current_time, "streaming": args.stream})
             for path in sorted((runtime / "queue").glob("*.json")):
                 try:
