@@ -19,6 +19,8 @@ Gemini Robotics ER 2 API의 이미지 추론부터 Isaac Sim의 로봇 조작·L
 
 배포 경로: [engiengi/physical-ai-system-design/GR-ER2](https://github.com/engiengi/physical-ai-system-design/tree/main/GR-ER2).
 
+Brev L40S 새 설치에서 전체 GUI·다섯 장면 하위 제어와 이미지 API·Franka 도구 호출·Live 대상 이동 복구를 확인했습니다. [설치·GUI 기록](./docs/검증결과.md#brev-validation)과 [실제 API 기록](./docs/검증결과.md#brev-api-validation)에 검증 범위와 중간 오류를 구분했습니다.
+
 ## 실행 구조
 
 - 호스트 Python 3.12 가상환경: 웹 GUI, Google API 요청, 입력·응답·평가 기록.

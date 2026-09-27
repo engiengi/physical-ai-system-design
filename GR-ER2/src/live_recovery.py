@@ -98,21 +98,29 @@ async def probe(transport="realtime"):
     out = run_dir("04_streaming_probe")
     print("Live probe: " + str(out), flush=True)
     try:
+        shutil.copy2(ROOT / "data/samples/scene_01.png", out / "input.png")
+        write_json(out / "request.json", {"model": MODEL, "transport": transport,
+                   "input_image": "input.png", "frames_sent": 3, "frame_interval_seconds": 1.1,
+                   "prompt": "Briefly name the colored blocks you can see in this camera image."})
         async with client().aio.live.connect(model=MODEL, config={"response_modalities": ["TEXT"]}) as session:
             for _ in range(3):
-                await session.send_realtime_input(video=types.Blob(data=jpeg(ROOT / "data/samples/scene_01.png"), mime_type="image/jpeg"))
+                await session.send_realtime_input(video=types.Blob(data=jpeg(out / "input.png"), mime_type="image/jpeg"))
                 await asyncio.sleep(1.1)
             prompt = "Briefly name the colored blocks you can see in this camera image."
             if transport == "realtime":
                 await session.send_realtime_input(text=prompt)
             else:
                 await session.send_client_content(turns=types.Content(role="user", parts=[types.Part(
-                    inline_data=types.Blob(data=jpeg(ROOT / "data/samples/scene_01.png"), mime_type="image/jpeg")),
+                    inline_data=types.Blob(data=jpeg(out / "input.png"), mime_type="image/jpeg")),
                     types.Part(text=prompt)]), turn_complete=True)
             messages = []
             async def receive():
                 async for msg in session.receive():
-                    messages.append(msg.model_dump(mode="json", exclude_none=True))
+                    raw = msg.model_dump(mode="json", exclude_none=True)
+                    # Resumption handles are session credentials, not experiment evidence.
+                    raw.pop("session_resumption_update", None)
+                    if raw:
+                        messages.append(raw)
                     if msg.server_content and msg.server_content.turn_complete:
                         break
             await asyncio.wait_for(receive(), 60)

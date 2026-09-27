@@ -1,11 +1,53 @@
 import sys
 import unittest
+import asyncio
+import contextlib
+import io
+import json
+import tempfile
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import AsyncMock, patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from live_recovery import evaluate_stream, TOOLS
 
 
 class LiveRecoveryTests(unittest.TestCase):
+    def test_probe_saves_input_without_session_credentials(self):
+        from PIL import Image
+        from live_recovery import probe
+
+        class Session:
+            send_realtime_input = AsyncMock()
+
+            async def receive(self):
+                yield SimpleNamespace(
+                    model_dump=lambda **kwargs: {"session_resumption_update": {"new_handle": "private-handle"}},
+                    server_content=None)
+                yield SimpleNamespace(
+                    model_dump=lambda **kwargs: {"server_content": {"output_transcription": {"text": "Red"}, "turn_complete": True}},
+                    server_content=SimpleNamespace(turn_complete=True))
+
+        @contextlib.asynccontextmanager
+        async def connect(**kwargs):
+            yield Session()
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "data/samples").mkdir(parents=True)
+            Image.new("RGB", (4, 4), "red").save(root / "data/samples/scene_01.png")
+            out = root / "result"
+            out.mkdir()
+            fake_client = SimpleNamespace(aio=SimpleNamespace(live=SimpleNamespace(connect=connect)))
+            with patch("live_recovery.ROOT", root), patch("app.run_dir", return_value=out), \
+                    patch("app.client", return_value=fake_client), patch("live_recovery.asyncio.sleep", new_callable=AsyncMock), \
+                    contextlib.redirect_stdout(io.StringIO()) as printed:
+                asyncio.run(probe())
+            self.assertEqual((out / "input.png").read_bytes(), (root / "data/samples/scene_01.png").read_bytes())
+            self.assertEqual(json.loads((out / "request.json").read_text())["frames_sent"], 3)
+            self.assertNotIn("private-handle", (out / "messages.json").read_text() + printed.getvalue())
+            self.assertEqual(len(json.loads((out / "messages.json").read_text())), 1)
+
     def evaluate(self, **changes):
         values = {"event": {"wall_time": 10}, "detection": {"wall_time": 12}, "interrupted": True,
                   "first_metrics": {"controller_status": "interrupted_by_stream_monitor"},
