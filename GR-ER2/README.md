@@ -2,7 +2,7 @@
 
 Gemini Robotics ER 2 API의 이미지 추론부터 Isaac Sim의 로봇 조작·Live 복구·멀티로봇 협업까지 실행하는 교육용 프로젝트입니다.
 
-**처음 시작: [실행방법.md](./실행방법.md)** — 필요한 설치, API 등록, 실행 명령, 결과 확인, 종료·문제 해결을 한 문서에 정리했습니다.
+**[실행방법](./실행방법.md)**에서 설치와 API 등록부터 시작하세요.
 
 | 할 일 | 매뉴얼 |
 |---|---|
@@ -17,19 +17,15 @@ Gemini Robotics ER 2 API의 이미지 추론부터 Isaac Sim의 로봇 조작·L
 | 직접 모니터·원격 전체 3D 화면 | [7 화면 모드](./실행방법.md#step-7) |
 | 결과 회수와 종료 | [8 결과](./실행방법.md#step-8) → [9 종료](./실행방법.md#step-9) |
 
-배포 경로: [engiengi/physical-ai-system-design/GR-ER2](https://github.com/engiengi/physical-ai-system-design/tree/main/GR-ER2).
-
-Brev L40S 새 설치에서 전체 GUI·다섯 장면 하위 제어와 이미지 API·Franka 도구 호출·Live 대상 이동 복구를 확인했습니다. [설치·GUI 기록](./docs/검증결과.md#brev-validation)과 [실제 API 기록](./docs/검증결과.md#brev-api-validation)에 검증 범위와 중간 오류를 구분했습니다.
-
 ## 실행 구조
 
 - 호스트 Python 3.12 가상환경: 웹 GUI, Google API 요청, 입력·응답·평가 기록.
 - Isaac Sim `6.0.0-dev2` 컨테이너: 카메라, 물리, 로봇 하위 제어. NVIDIA RTX 워크스테이션 또는 Brev L40S 서버에서 실행합니다.
 - Brev 전체 GUI: noVNC + SSH 터널. 개인 PC에는 GPU가 필요하지 않고, 서버에 공개 포트를 열지 않습니다.
 - Google API: 일반 ER 2 / Gemini 비교, ER 2 Streaming, 사후 영상 진행률 판단.
-- `outputs/`: 실행별 원본 입력·응답·시뮬레이션 영상·통합 영상·평가. Git에는 포함하지 않습니다.
+- `outputs/`: 실행별 입력·응답·영상·평가 결과.
 
-기본 블록 실습은 고정 카메라 RGB를 판단 시점마다 전달하고 같은 관측의 깊이로 좌표를 변환합니다. Live 실습은 카메라 프레임을 계속 전송합니다. 모델의 보고·제어 종료·물리적 성공을 따로 확인하세요. 실물 로봇에는 연결하지 않습니다.
+기본 블록 실습은 고정 카메라 RGB를 판단 시점마다 전달하고 같은 관측의 깊이로 좌표를 변환합니다. Live 실습은 카메라 프레임을 계속 전송합니다. 모델과 제어기의 역할은 [입력·출력과 하위 제어의 연결](./docs/폐루프_구성과_모델_제어기_역할.md)에서 설명합니다.
 
 ## 코드와 자료
 
@@ -46,9 +42,8 @@ Brev L40S 새 설치에서 전체 GUI·다섯 장면 하위 제어와 이미지 
 | `data/samples/` | 시뮬레이터 시작 시 생성하는 샘플 |
 | `runtime/` | 현재 카메라·대기열·로그, Git 제외 |
 
-원고 구성과 결과 해석은 [원고기획.md](./원고기획.md), 실제 실행 기록은 [기본 검증](./docs/검증결과.md) · [서랍/Spot](./docs/새환경_실험결과.md) · [협업](./docs/협업_실험결과.md), 모델과 하위 제어 역할은 [폐루프 설명](./docs/폐루프_구성과_모델_제어기_역할.md)을 참고하세요. 과거 영상 링크는 해당 `outputs/` 자료가 로컬에 있어야 열립니다.
+## 참고 자료
 
-API 키는 `.env` 또는 환경변수로만 등록합니다. NVIDIA 컨테이너·로봇 asset은 공급자 라이선스에 따라 사용하며 저장소에 재배포하지 않습니다.
-
+- 실험 결과: [블록 조작·복구](./docs/검증결과.md) · [스트리밍](./docs/스트리밍_시나리오_결과.md) · [서랍·Spot](./docs/새환경_실험결과.md) · [멀티로봇 협업](./docs/협업_실험결과.md)
 - [Google ER 2 공식 문서](https://ai.google.dev/gemini-api/docs/robotics-overview)
 - [NVIDIA Isaac Sim 요구사항](https://docs.isaacsim.omniverse.nvidia.com/6.0.0/installation/requirements.html)

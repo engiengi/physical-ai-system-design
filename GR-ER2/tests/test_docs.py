@@ -84,22 +84,8 @@ class DocumentationTests(unittest.TestCase):
 
     def test_private_writing_notes_ignored(self):
         rules = (ROOT / ".gitignore").read_text().splitlines()
-        for rule in ("/연구일지.md", "outputs/"):
+        for rule in ("/연구일지.md", "/원고기획.md", "outputs/"):
             self.assertIn(rule, rules)
-        self.assertNotIn("/원고기획.md", rules)
-
-    def test_manuscript_plan_routes_and_scope(self):
-        text = (ROOT / "원고기획.md").read_text()
-        anchors = re.findall(r'<a id="([^"]+)"></a>', text)
-        for target in re.findall(r'\]\(#([^)]*)\)', text):
-            self.assertIn(target, anchors)
-        manual = (ROOT / "실행방법.md").read_text()
-        for target in re.findall(r'\]\(실행방법.md#([^)]*)\)', text):
-            self.assertIn(f'<a id="{target}"></a>', manual)
-        for target in ("e8", "e9", "e10"):
-            self.assertIn(target, anchors)
-        for phrase in ("완료 오판", "진행률", "컨베이어는 인계 위치에서 정지", "outputs/", "Git에 보관"):
-            self.assertIn(phrase, text)
 
     def test_current_reader_route_and_result_scope(self):
         text = (ROOT / "실행방법.md").read_text()
@@ -111,7 +97,7 @@ class DocumentationTests(unittest.TestCase):
             self.assertIn(target, anchors)
         for instruction in ("git clone", "git pull --ff-only origin main", "GR_ER2_SCENE=blocks",
                             "drawer --smoke --no-perturb", "motion_quality_passed", "tool_result",
-                            "20260922_223639_56ea3f52", "새 clone에는 예전 결과가 없으며"):
+                            "outputs/", "영상과 실행 결과는 저장소에 포함되어 있지 않습니다"):
             self.assertIn(instruction, text)
         self.assertEqual(text.count("``` "), 0)
         self.assertEqual(sum(line.startswith("```") for line in text.splitlines()) % 2, 0)
