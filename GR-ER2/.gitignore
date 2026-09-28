@@ -10,3 +10,4 @@ outputs/
 data/uploads/
 data/samples/*.png
 data/samples/*.json
+/원고기획.md
