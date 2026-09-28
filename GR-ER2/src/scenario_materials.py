@@ -1,4 +1,4 @@
-"""Build traceable lecture stills from recorded frames; no API or simulator calls."""
+"""Build experiment stills and motion-quality plots from recorded frames; no API or simulator calls."""
 import argparse
 import bisect
 import csv
@@ -115,9 +115,9 @@ def build(out):
     links = "\n".join(f"- [{m['image']}]({m['image']}) — 원본 프레임 {m['source_frame']}" for m in manifest)
     if (dest/"motion_quality.png").exists():
         links += "\n- [동작 품질 그래프](motion_quality.png)\n- [품질 수치표](motion_quality.csv)"
-    (dest/"README.md").write_text("# 원고용 자료\n\n실제 기록 프레임에서 선택한 장면입니다. 최대 개방 장면과 최종 장면을 함께 봅니다.\n\n"
+    (dest/"README.md").write_text("# 실험 장면과 동작 품질\n\n실행 중 기록한 주요 장면과 평가 자료입니다.\n\n"
         +links+"\n\n- [입력·판단·동작 통합 영상](../presentation/synchronized.mp4)\n"
-        "- [평가 재검토](evaluation_audit.json)\n- [물리 이벤트 시점](events.csv)\n"
+        "- [동작 평가](evaluation_audit.json)\n- [물리 이벤트 시점](events.csv)\n"
         "- [프레임 출처](stills_manifest.json)\n\n이미지 왼쪽은 전체 카메라 기록입니다. 모델에 실제 전송한 저속 JPEG는 `../sent_frames/`에 별도로 보관합니다.\n")
     print(str(dest), flush=True)
 

@@ -107,7 +107,7 @@ case "$ACTION" in
     ;;
   stop)
     python3 -c 'import json,time,pathlib; p=pathlib.Path("runtime/status.json"); p.parent.mkdir(exist_ok=True); p.write_text(json.dumps({"ready":False,"updated":time.time(),"note":"stopping simulator"}))'
-    # Exact project container only; existing lecture containers are untouched.
+    # Stop only this project's simulator containers.
     for target in "$CONTAINER" "$GUI_CONTAINER"; do
       if docker container inspect "$target" >/dev/null 2>&1; then
         docker stop -t 20 "$target"

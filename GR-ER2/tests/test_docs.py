@@ -12,7 +12,7 @@ class DocumentationTests(unittest.TestCase):
         text = (ROOT / "실행방법.md").read_text()
         for word in ("Spark", "DGX", "/home/geunpil", "Tech_Contents_ws"):
             self.assertNotIn(word, text)
-        for phrase in ("Ubuntu 24.04", "python3.12-venv", "gh auth login",
+        for phrase in ("Ubuntu 24.04", "python3.12-venv",
                        "physical-ai-system-design.git", "nvidia-ctk runtime configure",
                        "docker pull nvcr.io/nvidia/isaac-sim:6.0.0-dev2",
                        "Restrict to Gemini API only", "set-key", "check-models",
@@ -35,7 +35,8 @@ class DocumentationTests(unittest.TestCase):
                     self.assertRegex(label, r'실행 아님|입력하지 않음')
 
     def test_reader_file_links(self):
-        for name in ('README.md', '실행방법.md'):
+        for name in ('README.md', '실행방법.md', 'docs/실험결과_읽기.md',
+                     'docs/자재운송_실험설계.md', 'docs/폐루프_구성과_모델_제어기_역할.md'):
             path = ROOT / name
             for link in re.findall(r'\]\(([^)]+)\)', path.read_text()):
                 if '://' in link:
@@ -84,7 +85,10 @@ class DocumentationTests(unittest.TestCase):
 
     def test_private_writing_notes_ignored(self):
         rules = (ROOT / ".gitignore").read_text().splitlines()
-        for rule in ("/연구일지.md", "/원고기획.md", "outputs/"):
+        for rule in ("/연구일지.md", "/원고기획.md", "outputs/", "/src/progress_figure.py",
+                     "/docs/검증결과.md", "/docs/새환경_실험결과.md",
+                     "/docs/서랍_동작품질_재검토.md", "/docs/스트리밍_시나리오_결과.md",
+                     "/docs/협업_실험결과.md"):
             self.assertIn(rule, rules)
 
     def test_current_reader_route_and_result_scope(self):

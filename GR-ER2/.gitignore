@@ -11,3 +11,9 @@ data/uploads/
 data/samples/*.png
 data/samples/*.json
 /원고기획.md
+/docs/검증결과.md
+/docs/새환경_실험결과.md
+/docs/서랍_동작품질_재검토.md
+/docs/스트리밍_시나리오_결과.md
+/docs/협업_실험결과.md
+/src/progress_figure.py

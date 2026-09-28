@@ -16,14 +16,14 @@
 <label>테스트 <select id="task"><option value="point">객체 위치</option><option value="box">Bounding Box</option><option value="relation">공간 관계</option><option value="plan">작업 계획</option><option value="trajectory">2D 경로</option></select></label>
 <textarea id="question">Find all colored blocks and the green tray.</textarea>
 <div id="models"></div><button class="primary" onclick="compare()">선택한 모델 실행</button>
-<p class="muted">이미지가 Google API로 전송됩니다. 실행 시 API 사용량이 발생할 수 있습니다. 예측 좌표가 잘못되면 원문과 오류를 그대로 남깁니다.</p>
+<p class="muted">이미지가 Google API로 전송됩니다. 실행 시 API 사용량이 발생할 수 있습니다.</p>
 </div></div><div id="comparison" class="row"></div></section>
 <section><h2>2 · Isaac Sim 직접 조작</h2>
 <div class="row"><div class="col"><h3 id="liveLabel">고정 상부 카메라 · 최신 화면</h3><img id="live" alt="시뮬레이터 시작 후 표시됩니다.">
 <p><select id="scene"><option value="0">장면 1</option><option value="1">장면 2</option><option value="2">장면 3</option></select>
 <button onclick="sim('reset')">장면 초기화</button><button onclick="takeSnapshot()">선택용 사진 촬영</button></p>
 <button onclick="sim('shift')">방해 주입: 빨간 블록 이동</button><button class="danger" onclick="stopNow()">정지 요청</button>
-<p class="muted">정지 후 재개하려면 장면 초기화. 방해 주입은 명시적으로 물체 위치를 변경하는 조작입니다.</p>
+<p class="muted">정지 후 재개하려면 장면을 초기화하세요. 방해 버튼을 누르면 빨간 블록이 이동합니다.</p>
 </div><div class="col"><h3>클릭할 고정 관측 이미지</h3><img class="view" id="selection" alt="‘선택용 사진 촬영’을 누르세요.">
 <p><button id="pickMode" class="selected" onclick="mode('pick')">① 블록 윗면 중앙</button><button id="placeMode" onclick="mode('place')">② 빈 트레이 바닥</button></p>
 <p id="points">좌표를 선택하세요. 순서는 [y, x]입니다.</p>
@@ -43,12 +43,12 @@
 <pre id="recoveryResult">방해 시점, 단계별 입력·행동, 전체 영상과 복구 판정 경로가 표시됩니다.</pre></section>
 <section><h2>Live 스트리밍 · 동작 중 감지·중단·복구</h2>
 <p>고정 카메라의 JPEG 프레임을 ER 2 Streaming 모델의 지속 WebSocket 세션으로 최대 1 FPS 전송합니다. 첫 행동 중 모델이 목표 이동을 보고하면 동작을 중단하고 Live 세션에서 재계획합니다.</p>
-<p class="muted">초기 행동은 일반 ER 2가 계획하고 Live 모델이 별도로 감독합니다. 영상만으로 자동 응답하지 않으므로 앞선 판단 완료 후 heartbeat를 전달합니다. 장면 초기화·API 과금이 발생합니다. Live 세션은 240초·최대 24개 판단 턴으로 제한합니다. 저장 후 통합 영상을 만드는 시간이 추가됩니다. 단일 실험 중 다른 버튼은 누르지 않습니다.</p>
+<p class="muted">초기 행동은 일반 ER 2가 계획하고 Live 모델이 별도로 감독합니다. 장면 초기화·API 과금이 발생합니다. Live 세션은 240초·최대 24개 판단 턴으로 제한합니다. 저장 후 통합 영상을 만드는 시간이 추가됩니다. 단일 실험 중 다른 버튼은 누르지 않습니다.</p>
 <label>시나리오 <select id="streamScenario"><option value="target_shift">S1 집기 대상 이동</option><option value="goal_shift">S2 목적지 트레이 이동</option><option value="grasp_drop">S3 운반 중 낙하</option></select></label>
 <p>완료 후 결과의 <code>presentation/synchronized.mp4</code>를 열면 실제 시뮬레이션·전송 이미지·요청·응답을 한 화면에서 볼 수 있습니다. 각 자료의 타임스탬프로 만든 1배속 동기화 영상입니다.</p>
 <button class="primary" onclick="runStreamRecovery()">Live 스트리밍 방해·복구 실행</button>
 <pre id="streamRecoveryResult">변화 감지 시각, 동작 중단 여부, 복구 판정과 전송 프레임 경로가 표시됩니다.</pre></section>
-<section><h2>4 · 저장된 결과 보기</h2><button onclick="loadRuns()">최근 실행 목록 새로고침</button><p class="muted">영상·최종 이미지·원문 JSON을 아래에서 직접 열 수 있습니다. 영상은 실제 시뮬레이션 카메라 기록입니다.</p><div id="runs"></div></section>
+<section><h2>4 · 저장된 결과 보기</h2><button onclick="loadRuns()">최근 실행 목록 새로고침</button><p class="muted">실행별 영상·최종 이미지·응답 JSON을 열 수 있습니다.</p><div id="runs"></div></section>
 <section><h2>5 · 다른 환경: 서랍 조작 / Spot 설비 점검</h2>
 <p>먼저 터미널에서 해당 환경을 시작합니다. <code>GR_ER2_SCENE=drawer bash scripts/sim.sh start</code> 또는 <code>GR_ER2_SCENE=patrol bash scripts/sim.sh start</code>. 환경 전환 전에는 <code>bash scripts/sim.sh stop</code>을 실행합니다. 현재 화면의 카메라가 새 환경으로 바뀝니다.</p>
 <button onclick="runEnvironment('drawer')">Franka 서랍 닫힘·재열기</button>

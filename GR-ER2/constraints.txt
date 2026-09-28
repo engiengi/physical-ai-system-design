@@ -1,4 +1,4 @@
-# Full host dependency set verified on Spark / Python 3.12, 2026-09-21.
+# Pinned host dependencies for Python 3.12.
 annotated-types==0.8.0
 anyio==4.15.1
 certifi==2026.7.22

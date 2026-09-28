@@ -80,7 +80,7 @@ def write_report(out, result, state):
         relative = os.path.relpath(ROOT / action["output"], out)
         lines.append(f"- 복구 행동 {index}: [측면 영상]({relative}/rollout_video/side.mp4) · [평가]({relative}/metrics.json)")
     lines += ["", "## 해석 범위", "",
-              "조건당 한 회의 사례입니다. 초기 모델·관찰 방식이 기본 실험과 달라 성공률 비교를 주장하지 않습니다.",
+              "일반 ER 2가 초기 행동을 계획하고 Live 모델이 감독·복구합니다. 기본 이미지 실험과 모델·입력 방식이 다릅니다.",
               "감지 시각은 모델의 보고가 호스트에 도착한 시각입니다. JPEG 최대 1 FPS 입력과 API 지연을 포함합니다.",
               "동작 중 중단 성공과 최종 배치 성공을 구분하고, 부수적인 물체 접촉도 영상으로 확인합니다."]
     (out / "README.md").write_text("\n".join(lines) + "\n", encoding="utf-8")

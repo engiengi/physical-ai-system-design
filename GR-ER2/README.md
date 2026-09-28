@@ -44,6 +44,7 @@ Gemini Robotics ER 2 API의 이미지 추론부터 Isaac Sim의 로봇 조작·L
 
 ## 참고 자료
 
-- 실험 결과: [블록 조작·복구](./docs/검증결과.md) · [스트리밍](./docs/스트리밍_시나리오_결과.md) · [서랍·Spot](./docs/새환경_실험결과.md) · [멀티로봇 협업](./docs/협업_실험결과.md)
+- [실험 결과 읽기](./docs/실험결과_읽기.md): 영상·모델 응답·평가값 확인
+- [자재 운송 실험 구성](./docs/자재운송_실험설계.md): 조건·모델 입력·로봇 역할
 - [Google ER 2 공식 문서](https://ai.google.dev/gemini-api/docs/robotics-overview)
 - [NVIDIA Isaac Sim 요구사항](https://docs.isaacsim.omniverse.nvidia.com/6.0.0/installation/requirements.html)
