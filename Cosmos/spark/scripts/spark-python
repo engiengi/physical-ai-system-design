@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+COSMOS_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+export VIRTUAL_ENV="${COSMOS_SPARK_WORKSPACE:-$COSMOS_ROOT}/.venv"
+export PATH="$VIRTUAL_ENV/bin:$PATH"
+export LD_PRELOAD="/lib/aarch64-linux-gnu/libgomp.so.1${LD_PRELOAD:+:$LD_PRELOAD}"
+export OMNI_KIT_ACCEPT_EULA=YES
+export ISAACSIM_ACCEPT_EULA=Y
+unset PYTHONPATH
+cd "$COSMOS_ROOT"
+exec "$VIRTUAL_ENV/bin/python" "$@"

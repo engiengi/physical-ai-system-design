@@ -1,0 +1,8 @@
+[thor]
+host = "thor"
+workspace = "/home/user/cosmos_ws"
+uri = "ws://thor:8000"
+port = 8000
+
+[spark]
+workspace = "/home/user/cosmos_ws"

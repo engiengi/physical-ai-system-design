@@ -1,0 +1,12 @@
+{
+  "scope": "implementation_validation_not_model_evaluation",
+  "mode": "smoke",
+  "task": "BananaInBowlTask",
+  "episodes_per_condition": 2,
+  "seed_start": 0,
+  "execute_horizon": 16,
+  "max_steps": 6,
+  "headless": false,
+  "record_thor": false,
+  "conditions": [{"name":"diagnostic","pose_range_m":0}]
+}

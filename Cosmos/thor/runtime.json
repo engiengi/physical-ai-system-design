@@ -1,0 +1,9 @@
+{
+  "python": "3.13.15",
+  "torch": "2.10.0+cu130",
+  "cuda": "13.0",
+  "framework": {
+    "url": "https://github.com/NVIDIA/cosmos-framework.git",
+    "revision": "18d90eacbda778e666e6978dc1ab6ba8635400e3"
+  }
+}

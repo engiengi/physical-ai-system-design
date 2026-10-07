@@ -1,0 +1,14 @@
+{
+  "scope":"implementation_validation_not_formal_evaluation",
+  "mode":"policy",
+  "task":"BananaInBowlTask",
+  "episodes_per_condition":1,
+  "seed_start":0,
+  "policy_seed_mode":"legacy",
+  "execute_horizon":16,
+  "max_steps":16,
+  "headless":false,
+  "record_thor":true,
+  "timeout":60,
+  "conditions":[{"name":"capture_diagnostic","pose_range_m":0}]
+}

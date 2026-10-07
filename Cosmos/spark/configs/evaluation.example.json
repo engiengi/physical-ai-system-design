@@ -1,0 +1,17 @@
+{
+  "description": "Proposed conditions. Inspect each before freezing the evaluation protocol.",
+  "scope": "formal",
+  "headless": false,
+  "record_thor": true,
+  "policy_seed_mode": "explicit",
+  "policy_seed_start": 1000,
+  "task": "BananaInBowlTask",
+  "episodes_per_condition": 10,
+  "seed_start": 0,
+  "execute_horizon": 16,
+  "conditions": [
+    {"name": "default", "pose_range_m": 0.0},
+    {"name": "pose_5cm", "pose_range_m": 0.05},
+    {"name": "pose_10cm", "pose_range_m": 0.10}
+  ]
+}
