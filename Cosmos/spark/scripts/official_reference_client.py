@@ -1,11 +1,11 @@
 """Execute pinned official run.py; observation-only tracing plus declared horizon intervention."""
-import argparse,json,runpy,sys,time,hashlib,subprocess
+import argparse,json,runpy,sys,time,hashlib,subprocess,os
 from pathlib import Path
 import cv2,numpy as np
 from cosmos_spark.artifacts import write_json,append_jsonl
 from cosmos_spark.runner import snapshot,provenance
 ROOT=Path(__file__).resolve().parents[1]
-p=argparse.ArgumentParser();p.add_argument('--run-id',required=True);p.add_argument('--task',required=True);p.add_argument('--horizon',type=int,choices=[16,32],required=True)
+p=argparse.ArgumentParser();p.add_argument('--run-id',required=True);p.add_argument('--task',required=True);p.add_argument('--horizon',type=int,choices=[8,16,32],required=True)
 a=p.parse_args();out=ROOT/'runs'/a.run_id;out.mkdir(parents=True,exist_ok=False)
 # OpenCV's optional preview is separate from the live Isaac Sim GUI. This ARM64
 # environment has a headless OpenCV build; keep policy/physics/rendering intact.
@@ -15,7 +15,7 @@ if not opencv_preview:
  cv2.waitKey=lambda *args,**kwargs: -1
  print('[reference] OpenCV auxiliary preview unavailable; Isaac Sim GUI remains enabled.',flush=True)
 write_json(out/'gui_compatibility.json',{'isaac_sim_headless':False,'opencv_auxiliary_preview':opencv_preview,'reason':'OpenCV GUI backend unavailable' if not opencv_preview else None})
-ep=out/'episode_0000';ep.mkdir();write_json(out/'run.json',{'arguments':vars(a),'environment':provenance(),'official_entrypoint':'RoboLab/policies/cosmos3/run.py','instrumentation':'read-only traces; only horizon16 condition changes client.OPEN_LOOP_HORIZON'})
+ep=out/'episode_0000';ep.mkdir();write_json(out/'run.json',{'arguments':vars(a),'environment':provenance(),'official_entrypoint':'RoboLab/policies/cosmos3/run.py','instrumentation':'read-only traces; horizon intervention changes client.OPEN_LOOP_HORIZON'})
 from robolab.eval import runner
 original_eval=runner.run_evaluation
 def evaluation(*args,**kwargs):
