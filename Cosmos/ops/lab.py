@@ -47,12 +47,21 @@ def remote_python(cfg, code, *args):
 
 def source_files(root=ROOT):
     files = []
+    runtime_dirs = {
+        '.git', '.venv', '.cache', '.tools', '.lab', '__pycache__',
+        '.pytest_cache', 'external', 'models', 'data', 'outputs', 'runs',
+        'captures', 'reports', 'logs', 'deploy',
+    }
     for directory in ('spark/src', 'spark/scripts', 'spark/tests', 'spark/configs', 'thor', 'ops'):
-        for p in sorted((root / directory).rglob('*')):
-            if p.is_symlink() or not p.is_file() or '__pycache__' in p.parts:
-                continue
-            if p.suffix in ('.py', '.sh', '.json', '.toml', '.lock') or p.name == 'spark-python':
-                files.append(p)
+        for parent, dirs, names in os.walk(root / directory):
+            dirs[:] = [name for name in dirs
+                       if name not in runtime_dirs and not (Path(parent) / name).is_symlink()]
+            for name in names:
+                p = Path(parent) / name
+                if p.is_symlink() or not p.is_file():
+                    continue
+                if p.suffix in ('.py', '.sh', '.json', '.toml', '.lock') or p.name == 'spark-python':
+                    files.append(p)
     files.extend(root / name for name in ('lab', 'config.example.toml', 'spark/pyproject.toml', 'spark/uv.lock', '.gitignore'))
     return sorted(set(files))
 

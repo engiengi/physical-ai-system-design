@@ -4,7 +4,12 @@ version = "0.1.0"
 requires-python = ">=3.11,<3.12"
 dependencies = [
   "robolab", "isaacsim[all,extscache]==5.1.0", "isaaclab==2.3.2.post1",
-  "torch==2.9.0", "torchvision==0.24.0", "torchaudio==2.9.0", "pytest>=8",
+  "torch==2.9.0; platform_machine == 'aarch64'",
+  "torchvision==0.24.0; platform_machine == 'aarch64'",
+  "torchaudio==2.9.0; platform_machine == 'aarch64'",
+  "torch==2.7.0; platform_machine == 'x86_64'",
+  "torchvision==0.22.0; platform_machine == 'x86_64'",
+  "torchaudio==2.7.0; platform_machine == 'x86_64'", "pytest>=8",
 ]
 
 [build-system]
@@ -18,7 +23,11 @@ where = ["src"]
 index-strategy = "unsafe-best-match"
 # Isaac Lab v2.3.2's ARM installer selects torch 2.9 / CUDA 13.0.
 # Isaac Sim's metadata still pins the x86 torch 2.7 stack.
-override-dependencies = ["torch==2.9.0", "torchvision==0.24.0", "torchaudio==2.9.0", "websockets>=14.0"]
+override-dependencies = [
+  "torch==2.9.0; platform_machine == 'aarch64'", "torchvision==0.24.0; platform_machine == 'aarch64'", "torchaudio==2.9.0; platform_machine == 'aarch64'",
+  "torch==2.7.0; platform_machine == 'x86_64'", "torchvision==0.22.0; platform_machine == 'x86_64'", "torchaudio==2.7.0; platform_machine == 'x86_64'",
+  "websockets>=14.0",
+]
 constraint-dependencies = ["warp-lang != 1.13.0.dev20260418"]
 
 [tool.uv.extra-build-dependencies]
@@ -26,9 +35,14 @@ flatdict = ["setuptools<81", "wheel"]
 
 [tool.uv.sources]
 robolab = { path = "RoboLab", editable = true }
-torch = { index = "pytorch-cu130" }
-torchvision = { index = "pytorch-cu130" }
-torchaudio = { index = "pytorch-cu130" }
+torch = [{ index = "pytorch-cu130", marker = "platform_machine == 'aarch64'" }, { index = "pytorch-cu128", marker = "platform_machine == 'x86_64'" }]
+torchvision = [{ index = "pytorch-cu130", marker = "platform_machine == 'aarch64'" }, { index = "pytorch-cu128", marker = "platform_machine == 'x86_64'" }]
+torchaudio = [{ index = "pytorch-cu130", marker = "platform_machine == 'aarch64'" }, { index = "pytorch-cu128", marker = "platform_machine == 'x86_64'" }]
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
 
 [[tool.uv.index]]
 name = "pytorch-cu130"

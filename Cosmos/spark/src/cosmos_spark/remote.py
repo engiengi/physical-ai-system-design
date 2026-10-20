@@ -1,10 +1,12 @@
 """Explicit, bounded transfers and recorder control in the authorized Thor workspace."""
 import hashlib
 import json
+import os
 from pathlib import Path, PurePosixPath
 import re
 import shlex
 import subprocess
+import shutil
 
 from .settings import HOST, WORKSPACE
 ROOT = Path(__file__).resolve().parents[2]
@@ -22,7 +24,7 @@ def remote_path(value):
         raise ValueError('Invalid Thor artifact path')
     p = PurePosixPath(value)
     if '..' in p.parts or not str(p).startswith(WORKSPACE + '/'):
-        raise ValueError('Artifact must be within Thor cosmos_ws')
+        raise ValueError('Artifact must be within the configured inference workspace')
     return str(p)
 
 
@@ -34,8 +36,17 @@ def fetch_file(source, target, expected_sha256=None):
         raise FileExistsError(target)
     temporary = target.with_name(target.name + '.partial')
     try:
-        subprocess.run(['scp', '-q', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=5',
-                        HOST + ':' + source, str(temporary)], check=True, timeout=180)
+        transport = os.environ.get('COSMOS_ARTIFACT_TRANSPORT', 'ssh')
+        if transport == 'local':
+            resolved = Path(source).resolve(strict=True)
+            if not resolved.is_relative_to(Path(WORKSPACE).resolve()):
+                raise ValueError('Artifact symlink escapes the inference workspace')
+            shutil.copyfile(resolved, temporary)
+        elif transport == 'ssh':
+            subprocess.run(['scp', '-q', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=5',
+                            HOST + ':' + source, str(temporary)], check=True, timeout=180)
+        else:
+            raise ValueError('COSMOS_ARTIFACT_TRANSPORT must be ssh or local')
         digest = hashlib.sha256(temporary.read_bytes()).hexdigest()
         if expected_sha256 is not None and digest != expected_sha256:
             raise ValueError('Thor artifact checksum mismatch')

@@ -14,14 +14,19 @@ def test_source_snapshot_excludes_runtime_secrets_and_documents(tmp_path):
     for rel in ('lab', 'config.example.toml', 'spark/pyproject.toml', 'spark/uv.lock', '.gitignore',
                 'spark/src/client.py', 'thor/serve.py', 'ops/control.py',
                 'config.local.toml', 'thor/.env', 'thor/README.md', 'spark/src/__pycache__/client.pyc',
-                'spark/runs/private.json'):
+                'spark/runs/private.json', 'thor/.venv/lib/package.py',
+                'thor/.cache/huggingface/config.json', 'thor/external/framework/train.py',
+                'thor/models/model/config.json', 'thor/data/manifest.json',
+                'thor/outputs/run/result.json', 'thor/deploy/releases/old/thor/serve.py'):
         p = tmp_path / rel
         p.parent.mkdir(parents=True, exist_ok=True)
         p.write_text('sample')
     (tmp_path / 'thor/credentials.py').symlink_to(tmp_path / 'config.local.toml')
+    (tmp_path / 'thor/linked-runtime').symlink_to(tmp_path / 'thor/.venv', target_is_directory=True)
     files = lab.snapshot(tmp_path)
     assert 'spark/src/client.py' in files and 'thor/serve.py' in files
     assert not any('private' in x or 'credentials' in x or 'README' in x or '.env' in x or '__pycache__' in x or 'local.toml' in x for x in files)
+    assert {name for name in files if name.startswith('thor/')} == {'thor/serve.py'}
     previous = files['thor/serve.py']
     (tmp_path / 'thor/serve.py').write_text('changed')
     assert lab.snapshot(tmp_path)['thor/serve.py'] != previous

@@ -1,0 +1,111 @@
+[
+  {
+    "file": "brev-create.png",
+    "source_page": "https://docs.isaacsim.omniverse.nvidia.com/5.1.0/installation/install_advanced_cloud_setup_brev.html",
+    "source_image": "https://docs.isaacsim.omniverse.nvidia.com/5.1.0/_images/isim_5.0_full_ref_external_brev_start.png",
+    "kind": "Official documentation UI screenshot; not a deployment performed for this guide",
+    "sha256": "6403d4f0f12af5767d5ae4959a63f9f0b7f2f6622314861beaeaaeb14cf17651"
+  },
+  {
+    "file": "brev-gpu.png",
+    "source_page": "https://docs.isaacsim.omniverse.nvidia.com/5.1.0/installation/install_advanced_cloud_setup_brev.html",
+    "source_image": "https://docs.isaacsim.omniverse.nvidia.com/5.1.0/_images/isim_5.0_full_ref_external_brev_gpu_seelect.png",
+    "kind": "Official documentation UI screenshot; not a deployment performed for this guide",
+    "sha256": "401ed08e5d3c5740382a2e56e6f38b8fa78dc4498b093833b744e8c15e1e9e53"
+  },
+  {
+    "file": "brev-deploy.png",
+    "source_page": "https://docs.isaacsim.omniverse.nvidia.com/5.1.0/installation/install_advanced_cloud_setup_brev.html",
+    "source_image": "https://docs.isaacsim.omniverse.nvidia.com/5.1.0/_images/isim_5.0_full_ref_external_brev_deploy.png",
+    "kind": "Official documentation UI screenshot; not a deployment performed for this guide",
+    "sha256": "128d93cf842005e01081e87a05c0f58d63270216616d9d6536dab6e891359cab"
+  },
+  {
+    "file": "brev-notebook.png",
+    "source_page": "https://docs.isaacsim.omniverse.nvidia.com/5.1.0/installation/install_advanced_cloud_setup_brev.html",
+    "source_image": "https://docs.isaacsim.omniverse.nvidia.com/5.1.0/_images/isim_5.0_full_ref_external_brev_open_notebook.png",
+    "kind": "Official documentation UI screenshot; not a deployment performed for this guide",
+    "sha256": "d55e0bbcba798fc5d729c0e529a72aac4a482f9bb2c38574d99a19763c1df17a"
+  },
+  {
+    "file": "isaac-python.png",
+    "source_page": "https://docs.isaacsim.omniverse.nvidia.com/5.1.0/installation/install_python.html",
+    "kind": "Public page captured in a clean browser; no account login",
+    "captured_at": "2026-10-20",
+    "sha256": "d0968d6a8e9ca3c8e9bef64a052f29e43c4bf18eb5933248ebb1df8f06a8b58e"
+  },
+  {
+    "file": "hf-policy.png",
+    "source_page": "https://huggingface.co/nvidia/Cosmos3-Edge-Policy-DROID",
+    "kind": "Public page captured in a clean browser; no account login",
+    "captured_at": "2026-10-20",
+    "sha256": "b193834483a99fbe63f83b3816f22034e835b1e3a3a20b685a93be48175fdf84"
+  },
+  {
+    "file": "hf-tokens.png",
+    "source_page": "https://huggingface.co/docs/hub/security-tokens",
+    "kind": "Public page captured in a clean browser; no account login",
+    "captured_at": "2026-10-20",
+    "sha256": "ee1a72e040b157f6c78287fdd16a08c45f31a76cae38dfd9be8b97bc4a969292"
+  },
+  {
+    "file": "brev-terminal-live.png",
+    "kind": "Screenshot of JupyterLab on the Brev L40S VM, accessed through an SSH tunnel",
+    "captured_at": "2026-10-20",
+    "sha256": "e4efc47c09697e7c5a5f08106e787edf384728532483ef884500261bf29d6833"
+  },
+  {
+    "file": "environments-live.png",
+    "kind": "Actual Brev VM Jupyter terminal showing installed package metadata; no inferred results",
+    "captured_at": "2026-10-20",
+    "sha256": "b4774713646bcdde67f237bdb9c9cc501928d9320716c905a9aca73994bea9d0"
+  },
+  {
+    "file": "banana-initial-live.png",
+    "kind": "Frame from Brev rendering smoke camera video",
+    "captured_at": "2026-10-20",
+    "sha256": "d8b6395b1391adaf12549ec193d21d9afd17d48174f17927e7daf3b75dbbe248"
+  },
+  {
+    "file": "banana-final-live.png",
+    "kind": "Final egocentric camera frame, Brev banana baseline trial; simulator success criterion",
+    "captured_at": "2026-10-20",
+    "sha256": "231cc05fc30d005e83c7786097d91735abd367f2e114f4af8ed845da7e5c591f"
+  },
+  {
+    "file": "models-live.png",
+    "kind": "Actual Brev Jupyter terminal displaying downloaded model revision manifests",
+    "captured_at": "2026-10-20",
+    "sha256": "16d226356cb8779a460664b1171c63c9c2dc79e8d4a52db62347b45ce04c9ea6"
+  },
+  {
+    "file": "brev-gui-live.png",
+    "kind": "Actual Isaac Sim GUI for official hammer trial on Brev L40S, viewed over noVNC SSH tunnel",
+    "captured_at": "2026-10-20",
+    "sha256": "31ba5cfe7fa04b98836624ae7b0efb04766f473b4dbfe31e8080654a0b0e94ce"
+  },
+  {
+    "file": "stability-comparison.png",
+    "kind": "Matplotlib comparison of exact final camera frames from Brev banana-settle and cube runs, before/after 3 seconds of extra physics; labels from episode.json secondary checks",
+    "captured_at": "2026-10-20",
+    "sha256": "dbbda39c3b8395f79e4f770ca8853d7f08c67212ea9266806aab5a3c570023ab"
+  },
+  {
+    "file": "prediction-comparison.png",
+    "kind": "Frame at 1.8 seconds from the actual Brev cube prospective comparison video; prediction left, simulation right; no synthetic editing",
+    "captured_at": "2026-10-20",
+    "sha256": "897e1d5e6d57ab4dee89346e3106ee454f2dec0bb5bdf834f1c9a8e079fe3606"
+  },
+  {
+    "file": "analysis-results.png",
+    "kind": "Actual Jupyter terminal reading model results: execution status and model verdict; includes an incorrect holding claim, not a ground-truth label",
+    "captured_at": "2026-10-20",
+    "sha256": "23d136740607ead3820e2980727615345859ee2ee4b1fdaa7bc01dcc24847b93"
+  },
+  {
+    "file": "lighting-frames.png",
+    "kind": "Four frames from the generated lighting video at 0, 0.8, 1.6 and 2.6 seconds, assembled with Matplotlib; camera/framing and texture drift visible",
+    "captured_at": "2026-10-20",
+    "sha256": "71ffb706c0ae6f1f44e0036e6a45f22f2c895a6509aa4f656e5eaffaaae21aad"
+  }
+]

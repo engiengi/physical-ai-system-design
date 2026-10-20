@@ -49,7 +49,7 @@ def test_gui_command_and_seed_are_fixed_by_plan():
     assert digest(p)!=original
 
 
-@pytest.mark.parametrize('s',['/etc/passwd','/home/geunpil/cosmos_ws/../secret','/home/geunpil/cosmos_ws/$(whoami)','/home/geunpil/cosmos_ws/a;true'])
+@pytest.mark.parametrize('s',['/etc/passwd','/srv/cosmos-inference/../secret','/srv/cosmos-inference/$(whoami)','/srv/cosmos-inference/a;true'])
 def test_remote_artifact_paths_are_bounded(s):
     with pytest.raises(ValueError):remote_path(s)
 
@@ -131,7 +131,8 @@ def test_analysis_errors_never_disappear_from_denominators(tmp_path):
     assert r['missing']==['c'] and len(r['errors'])==1 and r['false_success_numerator']==1
 
 
-def test_prediction_saved_before_actions_and_prefix_checked(tmp_path):
+def test_prediction_saved_before_actions_and_prefix_checked(tmp_path, monkeypatch):
+    monkeypatch.setattr("cosmos_spark.remote.WORKSPACE", "/srv/cosmos-inference")
     import hashlib,shutil,time,subprocess
     from cosmos_spark.prediction import PredictionReceiver
     source=tmp_path/'source.mp4'
@@ -147,7 +148,7 @@ def test_prediction_saved_before_actions_and_prefix_checked(tmp_path):
     actions=np.zeros((2,8),np.float32);actions[1,-1]=.8
     request={'session_id':'test'}
     response={'session_id':'test','run_id':'TEST_ONLY','request_id':0,
-              'prediction':{'path':'/home/geunpil/cosmos_ws/test/prediction.mp4','sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'frames':3,'fps':15}}
+              'prediction':{'path':'/srv/cosmos-inference/test/prediction.mp4','sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'frames':3,'fps':15}}
     receipt=receiver(response,'request_00000',actions,request)
     np.save(episode/'request_00000_actions.npy',actions)
     shutil.copyfile(source,episode/'policy_view.mp4')
@@ -205,13 +206,14 @@ def test_interrupted_attempt_is_saved_and_not_counted_as_failure(tmp_path,monkey
     assert json.loads((tmp_path/'attempts/00000.json').read_text())['finished_at']
 
 
-def test_thor_v2_artifacts_verify_action_and_identity(tmp_path):
+def test_thor_v2_artifacts_verify_action_and_identity(tmp_path, monkeypatch):
+    monkeypatch.setattr("cosmos_spark.remote.WORKSPACE", "/srv/cosmos-inference")
     import hashlib,shutil,subprocess
     from cosmos_spark.prediction import PredictionReceiver
     video=tmp_path/'video.mp4'
     subprocess.run(['ffmpeg','-v','error','-f','lavfi','-i','color=c=blue:s=640x540:r=15','-frames:v','3','-c:v','libx264','-threads','1',str(video)],check=True)
     actions=np.zeros((2,8),np.float32);action=tmp_path/'action.npy';np.save(action,actions)
-    def info(p):return {'path':'/home/geunpil/cosmos_ws/'+p.name,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
+    def info(p):return {'path':'/srv/cosmos-inference/'+p.name,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
     manifest={'run_id':'v2','request_id':4,'session_id':'test','policy_seed':7,
               'prediction':{**info(video),'frames':3,'fps':15},'action':{**info(action),'shape':[2,8]}}
     response={**{k:manifest[k] for k in ('run_id','request_id','session_id','policy_seed')},'artifacts':manifest}

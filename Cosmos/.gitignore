@@ -1,3 +1,4 @@
+# Local notes and internal documents; only learner-facing entrypoints are public.
 *.md
 *.html
 *.pdf
@@ -7,6 +8,7 @@
 config.local.toml
 .lab
 .venv
+.cache/
 .tools
 __pycache__
 *.py[cod]
@@ -27,3 +29,57 @@ thor_results
 *.safetensors
 *.npy
 *.npz
+.source-backup-*/
+.workspace-migration-*/
+!/README.md
+!/실행방법.md
+
+/cosmos-results.tar.gz*
+
+# Internal authoring, review and one-off experiment helpers (preserved locally).
+/spark/scripts/apply_improvement_nodrill.py
+/spark/scripts/audit_completion_batch.py
+/spark/scripts/audit_completion_thor.py
+/spark/scripts/audit_improvement_media.py
+/spark/scripts/audit_improvement_prediction.py
+/spark/scripts/audit_official_reference.py
+/spark/scripts/audit_prediction_alignment.py
+/spark/scripts/build_completion_draft.py
+/spark/scripts/build_completion_report.py
+/spark/scripts/build_corrected_outcome_report.py
+/spark/scripts/build_improvement_report.py
+/spark/scripts/build_official_reference_report.py
+/spark/scripts/build_pilot_report.py
+/spark/scripts/build_reference_clips.py
+/spark/scripts/build_thor_capture_report.py
+/spark/scripts/catalog_improvement_artifacts.py
+/spark/scripts/convert_spark_motion_on_thor.py
+/spark/scripts/finish_completion_batch.py
+/spark/scripts/finish_corrected_outcomes.py
+/spark/scripts/inspect_droid_frames.py
+/spark/scripts/normalize_improvement_analysis.py
+/spark/scripts/plot_completion_metrics.py
+/spark/scripts/plot_reference_gripper.py
+/spark/scripts/prepare_improvement_analysis.py
+/spark/scripts/prepare_improvement_followup.py
+/spark/scripts/prepare_improvement_notion.py
+/spark/scripts/prepare_spark_media.py
+/spark/scripts/replay_cube_settling.py
+/spark/scripts/review_reference_frames.py
+/spark/scripts/run_improvement_forecast.py
+/spark/scripts/run_improvement_media_queue.py
+/spark/scripts/run_improvement_policy_queue.py
+/spark/scripts/run_improvement_recovery.py
+/spark/scripts/run_official_reference_queue.py
+/spark/scripts/run_reference_fixed_inputs.py
+/spark/scripts/summarize_improvement_analysis.py
+
+# Obsolete launcher from the workspace layout before consolidation.
+/spark/lab
+
+# Publish only screenshots and provenance used by the run guide.
+/docs/*
+!/docs/images/
+/docs/images/*
+!/docs/images/run-guide/
+/docs/images/run-guide/brev-terminal.png

@@ -4,15 +4,18 @@ from pathlib import Path
 import numpy as np
 sys.path.insert(0, os.environ.get('COSMOS_THOR_CODE', str(Path(__file__).resolve().parents[3] / 'thor')))
 from common import configure,gpu_lock,new_run,write_json,pack
-p=argparse.ArgumentParser();p.add_argument('--run',required=True);p.add_argument('--interval',choices=['on','off'],required=True);p.add_argument('--fixed-seed',type=int)
-a=p.parse_args();root=configure(os.environ.get('COSMOS_THOR_WORKSPACE', str(Path.home() / 'cosmos_ws')));lock=gpu_lock(root);out=new_run(root,a.run)
-framework=root/'external/cosmos-framework-reference-20261005';sys.path.insert(0,str(framework))
+p=argparse.ArgumentParser();p.add_argument('--run',required=True);p.add_argument('--interval',choices=['on','off'],required=True);p.add_argument('--fixed-seed',type=int);p.add_argument('--workspace',default=os.environ.get('COSMOS_THOR_WORKSPACE',str(Path(__file__).resolve().parents[3]/'thor')));p.add_argument('--framework',type=Path);p.add_argument('--host',default='0.0.0.0');p.add_argument('--port',type=int,default=8000)
+a=p.parse_args();root=configure(a.workspace);lock=gpu_lock(root);out=new_run(root,a.run)
+framework=(a.framework or root/'external/cosmos-framework-reference-20261005').resolve()
+import subprocess
+if subprocess.check_output(['git','-C',str(framework),'rev-parse','HEAD'],text=True).strip()!='cf5d68c00d97ccd2480a2320ed652b92dec63102':raise RuntimeError('Reference framework revision mismatch')
+sys.path.insert(0,str(framework))
 sys.path.insert(0,str(root/'external/reference-python-20261005'))
 (out/'pid').write_text(str(os.getpid()))
 import subprocess
 from cosmos_framework.scripts import action_policy_server_robolab as official
 args=official.RobolabServerArgs(checkpoint_path=str(root/'models/Cosmos3-Edge-Policy-DROID'),
- output_dir=out/'native',host='0.0.0.0',port=8000,seed=1200 if a.fixed_seed is None else a.fixed_seed,deterministic_seed=a.fixed_seed is not None,format_prompt_as_json=True,
+ output_dir=out/'native',host=a.host,port=a.port,seed=1200 if a.fixed_seed is None else a.fixed_seed,deterministic_seed=a.fixed_seed is not None,format_prompt_as_json=True,
  guidance_interval=[960,1001] if a.interval=='on' else None)
 original_init=official.RobolabPolicyService.__init__;original_infer=official.RobolabPolicyService.infer
 original_seed=official.RobolabPolicyService._next_seed
